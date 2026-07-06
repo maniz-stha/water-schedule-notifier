@@ -9,7 +9,7 @@ from config import load_config
 from telegram_client import send_telegram_message
 from schedule_parser import find_slots_starting_in_hour
 
-def run_notifications(schedule_data: dict, current_time: datetime, bot_token: str, chat_id: str):
+def run_notifications(schedule_data: dict, current_time: datetime, bot_token: str, chat_id: str, dry_run=False):
     """Find matching slots, sleep if needed, and send notifications."""
     slots = find_slots_starting_in_hour(schedule_data, current_time)
     if not slots:
@@ -19,8 +19,11 @@ def run_notifications(schedule_data: dict, current_time: datetime, bot_token: st
     for slot in slots:
         delay = slot["delay_seconds"]
         if delay > 0:
-            print(f"Sleeping for {delay} seconds until slot start time {slot['start_time']}...")
-            time.sleep(delay)
+            if dry_run:
+                print(f"[Dry Run] Would sleep for {delay} seconds until slot start time {slot['start_time']}")
+            else:
+                print(f"Sleeping for {delay} seconds until slot start time {slot['start_time']}...")
+                time.sleep(delay)
             
         message = (
             f"**Water Alert - {slot['date']}**\n"
@@ -29,19 +32,29 @@ def run_notifications(schedule_data: dict, current_time: datetime, bot_token: st
             f"End: {slot['end_time']}"
         )
         
-        print(f"Sending alert for {slot['pipeline']} pipeline...")
-        success = send_telegram_message(bot_token, chat_id, message)
-        if success:
-            print("Alert sent successfully!")
+        if dry_run:
+            print(f"[Dry Run] Sending Telegram message:\n{message}\n")
         else:
-            print("Failed to send alert.")
+            print(f"Sending alert for {slot['pipeline']} pipeline...")
+            success = send_telegram_message(bot_token, chat_id, message)
+            if success:
+                print("Alert sent successfully!")
+            else:
+                print("Failed to send alert.")
 
 def main():
-    try:
-        config = load_config()
-    except ValueError as e:
-        print(f"Configuration error: {e}")
-        sys.exit(1)
+    dry_run = "--dry-run" in sys.argv
+    
+    bot_token = "dummy_token"
+    chat_id = "dummy_chat_id"
+    if not dry_run:
+        try:
+            config = load_config()
+            bot_token = config["TELEGRAM_BOT_TOKEN"]
+            chat_id = config["TELEGRAM_CHAT_ID"]
+        except ValueError as e:
+            print(f"Configuration error: {e}")
+            sys.exit(1)
 
     schedule_path = os.path.join(os.path.dirname(__file__), "schedule.json")
     if not os.path.exists(schedule_path):
@@ -62,8 +75,9 @@ def main():
     run_notifications(
         schedule_data=schedule_data,
         current_time=current_time,
-        bot_token=config["TELEGRAM_BOT_TOKEN"],
-        chat_id=config["TELEGRAM_CHAT_ID"]
+        bot_token=bot_token,
+        chat_id=chat_id,
+        dry_run=dry_run
     )
 
 if __name__ == "__main__":
