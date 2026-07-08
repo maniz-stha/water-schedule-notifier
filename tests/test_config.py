@@ -18,3 +18,17 @@ class TestConfig(unittest.TestCase):
         with self.assertRaises(ValueError) as ctx:
             load_config(env_file=None)
         self.assertIn("Missing required environment variables", str(ctx.exception))
+
+    def test_load_ai_config_success(self):
+        with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "test-key-123", "GEMINI_MODEL": "gemini-2.0-flash"}):
+            from config import load_ai_config
+            ai_config = load_ai_config(env_file=None)
+            self.assertEqual(ai_config["GEMINI_API_KEY"], "test-key-123")
+            self.assertEqual(ai_config["GEMINI_MODEL"], "gemini-2.0-flash")
+
+    def test_load_ai_config_missing_key(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            from config import load_ai_config
+            with self.assertRaises(ValueError):
+                load_ai_config(env_file=None)
+
