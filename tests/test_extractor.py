@@ -34,3 +34,30 @@ class TestGeminiExtractor(unittest.TestCase):
         self.assertEqual(len(result.entries), 1)
         self.assertEqual(result.entries[0].bs_day, 1)
         self.assertEqual(result.entries[0].location, "पुरानाे लाइन")
+
+    @mock.patch("extractor.genai.Client")
+    @mock.patch("extractor.Image.open")
+    @mock.patch("extractor.os.path.exists")
+    def test_extract_schedule_with_target_location(self, mock_exists, mock_image_open, mock_genai_client):
+        mock_exists.return_value = True
+        mock_client_instance = mock.Mock()
+        mock_genai_client.return_value = mock_client_instance
+        
+        expected_parsed = ExtractedScheduleSchema(
+            bs_year=2081,
+            bs_month=4,
+            entries=[]
+        )
+        
+        mock_response = mock.Mock()
+        mock_response.parsed = expected_parsed
+        mock_client_instance.models.generate_content.return_value = mock_response
+        
+        extractor = GeminiExtractor(api_key="test-key")
+        result = extractor.extract_schedule("dummy_path.png", target_location="basantapur")
+        
+        # Verify the target_location was included in the prompt
+        args, kwargs = mock_client_instance.models.generate_content.call_args
+        prompt_used = kwargs["contents"][0]
+        self.assertIn("basantapur", prompt_used)
+

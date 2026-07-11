@@ -8,18 +8,18 @@ from google.genai import types
 
 class ScheduleEntrySchema(BaseModel):
     bs_day: int = Field(description="The day of the month in B.S. calendar (1 to 32)")
-    location: str = Field(description="The pipeline or location name (e.g., 'old_line', 'new_line', 'पुरानाे लाइन', 'नयाँ लाइन')")
+    location: str = Field(description="The pipeline identifier. Must be either 'old_line' (for old pipeline / पुरानो पाइपलाइन) or 'new_line' (for new pipeline / नयाँ पाइपलाइन). Determine this from the image context (e.g. table title or header).")
     start_time: str = Field(description="The start time in 24-hour HH:MM format (e.g., '04:00', '20:15')")
     end_time: str = Field(description="The end time in 24-hour HH:MM format (e.g., '05:00', '21:15')")
 
 class ExtractedScheduleSchema(BaseModel):
-    bs_year: int = Field(description="The Bikram Sambat (B.S.) year (e.g., 2081)")
-    bs_month: int = Field(description="The Bikram Sambat (B.S.) month number (1 to 12). 1=Baishakh, 2=Jestha, 3=Ashadh, 4=Shrawan, 5=Bhadra, 6=Ashwin, 7=Kartik, 8=Mangsir, 9=Poush, 10=Magh, 11=Falgun, 12=Chaitra")
-    entries: List[ScheduleEntrySchema] = Field(description="List of schedule entries extracted from the table")
+    bs_year: int = Field(description="The B.S. year (e.g. 2083). If the year is not explicitly mentioned anywhere in the image, return 0.")
+    bs_month: int = Field(description="The B.S. month (as a number 1 to 12)")
+    entries: List[ScheduleEntrySchema] = Field(description="List of schedule entries")
 
 class BaseExtractor(ABC):
     @abstractmethod
-    def extract_schedule(self, image_path: str) -> ExtractedScheduleSchema:
+    def extract_schedule(self, image_path: str, target_location: Optional[str] = None) -> ExtractedScheduleSchema:
         """Extract schedule from an image containing a table."""
         pass
 
@@ -31,7 +31,7 @@ class GeminiExtractor(BaseExtractor):
             self.client = genai.Client()
         self.model = model
 
-    def extract_schedule(self, image_path: str) -> ExtractedScheduleSchema:
+    def extract_schedule(self, image_path: str, target_location: Optional[str] = None) -> ExtractedScheduleSchema:
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"Image file not found at: {image_path}")
             
@@ -44,9 +44,20 @@ class GeminiExtractor(BaseExtractor):
             "Analyze this water schedule image. The schedule is for a single month in the Bikram Sambat (B.S.) calendar, "
             "written in Nepali language (Devanagari script). "
             "Please extract the B.S. year, the B.S. month (as a number 1 to 12), and the list of schedule entries. "
-            "For each entry, extract the B.S. day of the month, the location/pipeline name, start time (HH:MM), and end time (HH:MM). "
-            "Ensure the time is in 24-hour HH:MM format."
+            "For each entry, determine the B.S. day of the month, the start time, and the end time. "
+            "Crucially, identify whether the entry belongs to the old pipeline ('old_line') or the new pipeline ('new_line') "
+            "by looking at the table header, title, or context (e.g., 'पुरानो पाइपलाइन' or 'नयाँ पाइपलाइन'), and set this as the 'location'. "
+            "Ensure times are in 24-hour HH:MM format. "
+            "If the calendar year is not explicitly written in the image, return 0 for bs_year."
         )
+
+        
+        if target_location:
+            prompt += (
+                f"\n\nCRITICAL: Only extract schedule entries from the table rows whose list of water distribution areas "
+                f"('पानी वितरण हुने स्थान') contains the target location '{target_location}' (match transliterated English or native Devanagari). "
+                f"Ignore all rows that do not cover this location."
+            )
         
         response = self.client.models.generate_content(
             model=self.model,

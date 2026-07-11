@@ -1,9 +1,241 @@
 {
+    "2026-06-15": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-17": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            },
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-18": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-20": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-21": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ],
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-23": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-24": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-25": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-26": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-27": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-29": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            },
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-06-30": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-02": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-03": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ],
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-05": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-06": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-07": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-08": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
     "2026-07-09": {
         "old_line": [
             {
                 "start_time": "05:00",
                 "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-11": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            },
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-12": {
+        "old_line": [
+            {
+                "start_time": "05:00",
+                "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ]
+    },
+    "2026-07-14": {
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
             }
         ]
     },
@@ -12,6 +244,16 @@
             {
                 "start_time": "05:00",
                 "end_time": "06:00"
+            },
+            {
+                "start_time": "20:00",
+                "end_time": "21:00"
+            }
+        ],
+        "new_line": [
+            {
+                "start_time": "09:00",
+                "end_time": "21:00"
             }
         ]
     }
