@@ -8,7 +8,10 @@ def load_env_file(filepath=".env"):
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
                     key, val = line.split("=", 1)
-                    os.environ[key.strip()] = val.strip()
+                    key = key.strip()
+                    if key not in os.environ:
+                        os.environ[key] = val.strip()
+
 
 def load_config(env_file=".env"):
     """Load and validate credentials from the environment."""
@@ -30,3 +33,18 @@ def load_config(env_file=".env"):
         "TELEGRAM_BOT_TOKEN": bot_token,
         "TELEGRAM_CHAT_ID": chat_id
     }
+
+def load_ai_config(env_file=".env"):
+    """Load and validate AI credentials from the environment."""
+    if env_file:
+        load_env_file(env_file)
+    gemini_api_key = os.environ.get("GEMINI_API_KEY")
+    if not gemini_api_key:
+        raise ValueError("Missing required environment variable: GEMINI_API_KEY")
+    return {
+        "GEMINI_API_KEY": gemini_api_key,
+        "GEMINI_MODEL": os.environ.get("GEMINI_MODEL", "gemini-2.0-flash"),
+        "TARGET_LOCATION": os.environ.get("TARGET_LOCATION")
+    }
+
+
